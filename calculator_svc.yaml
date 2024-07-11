@@ -1,0 +1,88 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: calculator-1
+  name: calculator-1
+spec:
+  ports:
+    - port: 8080
+      name: highc
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: calculator-1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: calculator-1
+  name: calculator-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calculator-1
+  template:
+    metadata:
+      labels:
+        app: calculator-1
+    spec:
+      containers:
+        - image: kerstin1106/pi_calculator:v1
+          name: calculator-1
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+      nodeSelector:
+        kubernetes.io/hostname: k8s-node-1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: calculator-2
+  name: calculator-2
+spec:
+  ports:
+    - port: 8090
+      name: highc
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: calculator-2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: calculator-2
+  name: calculator-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calculator-2
+  template:
+    metadata:
+      labels:
+        app: calculator-2
+    spec:
+      containers:
+        - image: kerstin1106/pi_calculator:v1
+          name: calculator-2
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+      nodeSelector:
+        kubernetes.io/hostname: k8s-node-2
