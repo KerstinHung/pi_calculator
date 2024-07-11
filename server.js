@@ -17,7 +17,7 @@ function calculate() {
 	return pi;
 }
 
-app.get('/calculator', (req, res) => {
+app.get('/', (req, res) => {
 	res.send(process.env.NODE_IP + " Result: " + calculate());
 })
 
